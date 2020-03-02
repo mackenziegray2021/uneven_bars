@@ -1,0 +1,31 @@
+Master and slave interrupt generation
+– Master generates interrupts when a transmit or receive operation completes (or aborts due to an error)
+– Slave generates interrupts when data has been transferred or requested by a master or when a START or STOP condition is detected
+
+The I2C interface signals are alternate functions for some GPIO signals and default to be GPIO signals at reset, 
+with the exception of the I2C0SCL and I2CSDA pins which default to the I2C function. 
+The column in the table below titled "Pin Mux/Pin Assignment" lists the possible GPIO pin placements for the I2C signals. 
+The AFSEL bit in the GPIO Alternate Function Select (GPIOAFSEL) register (page 671) should be set to choose the I2C function. 
+The number in parentheses is the encoding that must be programmed into the PMCn field in the GPIO Port Control (GPIOPCTL) 
+register (page 688) to assign the I2C signal to the specified GPIO port pin. Note that the I2CSDA pin should be set to 
+open drain using the GPIO Open Drain Select (GPIOODR) register. 
+
+
+Each I2C module is comprised of both master and slave functions and is identified by a unique address. 
+A master-initiated communication generates the clock signal, SCL. For proper operation, 
+the SDA pin must be configured as an open-drain signal. Due to the internal circuitry that supports high-speed operation, 
+the SCL pin must not be configured as an open-drain signal, although the internal circuitry causes 
+it to act as if it were an open drain signal. 
+Both SDA and SCL signals must be connected to a positive supply voltage using a pull-up resistor.
+
+A High-to-Low transition on the SDA line while the SCL is High is defined as a START condition, 
+and a Low-to-High transition on the SDA line while SCL is High is defined as a STOP condition.
+
+The I2C master module generates an interrupt when a transaction completes (either transmit or receive), 
+when arbitration is lost, or when an error occurs during a transaction. 
+
+The slave module can generate an interrupt when data has been received or requested.
+
+In addition, the slave module can generate an interrupt when a start and stop condition is detected.
+
+The I2C modules can be placed into an internal loopback mode for diagnostic or debug work by setting the LPBK bit in the I2C Master Configuration (I2CMCR) register. 
